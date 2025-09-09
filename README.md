@@ -47,6 +47,7 @@ Untuk mengakses aplikasi PWS yang sudah di-deploy, dapat diklink link berikut : 
 7. Menjalankan perintah yang tersedia pada Project Command, yaitu untuk remote add pws, membuat branch, dan melakukan push pws master. Setelah itu, proyek sudah dapat diakses pada tautan PWS
 
 **Bagan Request Client ke Web Aplikasi Berbasis Django**
+
 Link gambar bagan : https://drive.google.com/file/d/1GuhQV8q4nPcqB9mLlcMjt2YGM1-1fRNb/view?usp=sharing
 * highlight biru = komponen yang digunakan (misal pengguna menggunakan browser) atau dibuat (misal membuat Model menggunakan models.py)
 * highlight merah = komponen eksternal atau pihak ketiga

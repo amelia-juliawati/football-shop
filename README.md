@@ -70,7 +70,7 @@ Menurut saya, Django merupakan framework yang sangat sesuai sebagai permulaan pe
 
 Django bersifat gratis dan open source sehingga memiliki komunitas pengguna yang besar. Hal ini memudahkan pengguna untuk mendapatkan bantuan ketika menghadapi masalah. Selain itu, dengan pola arsitektur MVT dan struktur folder serta file yang mudah dimengerti, Django mempermudah pengguna untuk memahami alur pengerjaan suatu proyek. Django juga unggul dalam hal keamanan dikarenakan sudah memiliki proteksi bawaan sehingga pengembang dapat lebih fokus pada pengembangan aplikasi. Django juga fleksibel untuk pengembangan berbagai jenis proyek karena kompatibel dengan berbagai jenis database dan mampu menangani trafik tinggi pada proyek berskala besar.
 
-## TUGAS 3
+## Tugas 3
 
 **Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?**
 

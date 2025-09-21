@@ -22,4 +22,10 @@
 <p><b>Deskripsi:</b></p>
 <p>{{ products.description }}</p>
 
+{% if products.user %}
+    <p>Seller: {{ products.user.username }}</p>
+{% else %}
+    <p>Seller: Unidentified </p>
+{% endif %}
+
 {% endblock content %}

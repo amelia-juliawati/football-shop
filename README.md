@@ -213,7 +213,7 @@ Pengguna 2 (lala) dengan 3 product
 
 **Menampilkan detail informasi pengguna dan menerapkan cookies**
 
-1. Mengimpor fungsi dan kelas yang dibutuhkan pada *views.py* seperti reverse, datetime, dan HttpResponseRedirect
+1. Mengimpor fungsi dan kelas yang dibutuhkan pada *views.py* seperti reverse, datetime, dan HttpResponsegRedirect
 2. Menambahkan dan mengubah kode pada user_login di *views.py* jika form valid dengan menerapkan cookies di dalamnya agar dapat mengakses waktu kapan terakhir kali user melakukan login (last_login) 
 3. Menambahkan variabel baru, yaitu last_login pada dictionary context dengan menggunakan cookies pada *views.py*
 4. Menambahkan dan mengubah fungsi user_logout agar dapat menghapus cookie ketika pengguna telah logout (menandakan sesinya telah selesai)

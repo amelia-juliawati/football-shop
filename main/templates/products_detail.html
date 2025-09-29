@@ -1,31 +1,113 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block meta %}
+<title>{{ products.name }} - Turboa</title>
+{% endblock meta %}
+
 {% block content %}
-<p><a href="{% url 'main:show_main' %}"><button>← Back to Products List</button></a></p>
+<div class="bg-white w-full min-h-screen">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-{% if products.thumbnail %}
-<img src="{{ products.thumbnail }}" alt="Products Photo" width="300">
-<br /><br />
-{% endif %}
+        <!-- Back Navigation -->
+        <div class="mb-6">
+            <a href="{% url 'main:show_main' %}"
+                class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+                ← Home
+            </a>
+        </div>
 
-<h1>Rp{{ products.price }}</h1>
-<h2><b>{{ products.name }}</b></h2>
+        <!-- Product -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-<p><b>{{ products.get_category_display }}</b> 
-    {% if products.is_featured %} | <b>Featured</b>{% endif %} </p>
+            <!-- Foto (Kolom pertama) -->
+            <div class="bg-white rounded-lg overflow-hidden">
+                {% if products.thumbnail %}
+                <img src="{{ products.thumbnail }}" alt="{{ products.name }}" class="w-full h-80 object-cover">
+                {% else %}
+                <div class="w-full h-80 bg-gray-200 flex items-center justify-center text-gray-500">
+                    <img src="{% static 'image/no-image.png' %}">
+                </div>
+                {% endif %}
+            </div>
 
-<p><b>Brand: </b>{{ products.brand }}</p>
+            <!-- Kolom kanan (detail + buy) -->
+            <div class="flex flex-col gap-4">
+                <!-- Detail Produk -->
+                <div class="bg-white rounded-lg">
+                    <h1 class="text-2xl font-bold text-gray-900 mb-3">
+                        {{ products.name }}
+                    </h1>
 
-{% if products.rating %}<p><b>Rating: </b>{{products.rating }}/5</p>{% endif %}
+                    <h2 class="text-4xl font-bold text-[#ED3F27] mb-4">
+                        Rp. {{ products.price|intcomma }}
+                    </h2>
 
-<p><b>Stock: </b>{{ products.stock }}</p>
+                    <!-- Category -->
+                    <div class="flex items-center gap-2 mb-4">
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-[#134686] text-white">
+                            {{ products.get_category_display }}
+                        </span>
+                        {% if products.is_featured %}
+                        <span
+                            class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800">
+                            Featured
+                        </span>
+                        {% endif %}
+                    </div>
 
-<p><b>Deskripsi:</b></p>
-<p>{{ products.description }}</p>
+                    <!-- Brand -->
+                    <p class="text-sm text-gray-700 mb-2"><b>Brand:</b> {{ products.brand }}</p>
+                </div>
 
-{% if products.user %}
-    <p>Seller: {{ products.user.username }}</p>
-{% else %}
-    <p>Seller: Unidentified </p>
-{% endif %}
+                <!-- Beli -->
+                <div class="bg-white border rounded-lg p-6 shadow-md flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Buy Now!</h3>
+                    </div>
+                    <div class="flex gap-3">
+                        <button
+                            class="w-1/2 bg-white border border-[#ED3F27] text-[#ED3F27] font-semibold py-2 px-4 rounded-lg hover:bg-[#fff5f5] transition">
+                            Add To Cart
+                        </button>
+                        <button
+                            class="w-1/2 bg-[#ED3F27] text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition">
+                            Buy
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full width bawah -->
+        <div class="mt-10">
+            <div class="flex items-center gap-5">
+                <!-- Stock dan Rating -->
+                <span class="inline-flex items-center px-2 py-1 rounded-md bg-yellow-100 text-yellow-800">
+                    ⭐ {{ products.rating }}
+                </span>
+                <span class="text-gray-500 text-sm">
+                    Stock: <span class="font-semibold">{{ products.stock }}</span>
+                </span>
+            </div>
+            <!-- Deskripsi -->
+            <div class="mt-6 text-gray-700 text-sm leading-relaxed">
+                <p class="font-semibold">Deskripsi:</p>
+                <p>{{ products.description }}</p>
+            </div>
+
+            <!-- Seller -->
+            <div class="mt-6 text-sm text-gray-600">
+                {% if products.user %}
+                <p><b>Seller:</b> {{ products.user.username }}</p>
+                {% else %}
+                <p><b>Seller:</b> Unidentified</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

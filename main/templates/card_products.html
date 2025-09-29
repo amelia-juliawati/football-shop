@@ -1,0 +1,81 @@
+{% load static %}
+{% load humanize %}
+
+<article
+    class="bg-white rounded-lg border border-gray-200 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+    <!-- Thumbnail -->
+    <div class="aspect-[4/3] relative overflow-hidden">
+        {% if products.thumbnail %}
+        <img src="{{ products.thumbnail }}" alt="{{ products.name }}" class="w-full h-full object-cover">
+        {% else %}
+        <div class="w-full h-full bg-gray-200"></div>
+        {% endif %}
+
+        <!-- Category Badge -->
+        <div class="absolute top-3 left-3">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-[#134686] text-white">
+                {{ products.get_category_display }}
+            </span>
+        </div>
+
+        <!-- Featured -->
+        <div class="absolute top-3 right-3 flex space-x-2">
+            {% if products.is_featured %}
+            <span class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-800">
+                Featured
+            </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-5">
+        <h3 class="text-lg font-semibold text-black mb-3 line-clamp-2 leading-tight min-h-[2.8rem]">
+            <a href="{% url 'main:show_products' products.id %}" class="hover:text-[#134686] transition-colors">
+                {{ products.name }}
+            </a>
+        </h3>
+
+        <h2 class="text-lg font-semibold text-[#ED3F27] mb-3 leading-tight">
+            Rp. {{ products.price|intcomma }}
+            </a>
+        </h2>
+
+        <div class="flex items-center mt-1 gap-3">
+            <span
+                class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800">
+                ⭐ {{ products.rating }}
+            </span>
+            <span class="text-gray-500 text-sm flex-1 truncate">
+                Brand: <span class="font-semibold">{{ products.brand }}</span>
+            </span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-4 border-t border-gray-300 pt-4">
+            {% if user.is_authenticated and products.user == user %}
+            <div class="flex items-center justify-between">
+                <a href="{% url 'main:show_products' products.id %}"
+                    class="text-[#134686] hover:text-[#0a2a52] font-medium text-sm transition-colors">
+                    View Product
+                </a>
+                <div class="flex space-x-3">
+                    <a href="{% url 'main:edit_products' products.id %}"
+                        class="text-gray-600 hover:text-gray-700 text-sm transition-colors">
+                        Edit
+                    </a>
+                    <a href="{% url 'main:delete_products' products.id %}"
+                        class="text-red-600 hover:text-red-700 text-sm transition-colors">
+                        Delete
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <a href="{% url 'main:show_products' products.id %}"
+                class="text-[#134686] hover:text-[#0a2a52] font-medium text-sm transition-colors">
+                View Product
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</article>

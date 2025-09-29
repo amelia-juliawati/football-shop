@@ -1,0 +1,62 @@
+/* font setting */
+body {
+    font-family: 'Nunito', sans-serif;
+}
+
+h1, h2, h3, title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+}
+
+/* form container */
+.form-style form input, form textarea, form select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #9faec1;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+/* focus dengan warna biru (primary color)*/
+.form-style form input:focus, form textarea:focus, form select:focus {
+    outline: none;
+    border-color: #134686;
+    box-shadow: 0 0 0 3px #134686;
+}
+
+/* checkbox styling */
+.form-style input[type="checkbox"] {
+    width: 1.25rem;  
+    height: 1.2rem;
+    padding: 0;
+    border: 2px solid #9faec1;  
+    border-radius: 0.5rem; 
+    background-color: white;
+    cursor: pointer;
+    position: relative;
+    appearance: none; 
+    -webkit-appearance: none;  
+    -moz-appearance: none;
+}
+
+.form-style input[type="checkbox"]:checked {
+    background-color: #134686; 
+    border-color: #134686;
+}
+
+.form-style input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 0.8rem; 
+}
+
+.form-style input[type="checkbox"]:focus {
+    outline: none;
+    border-color: #134686;
+    box-shadow: 0 0 0 z2px #073266;
+}

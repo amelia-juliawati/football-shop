@@ -1,9 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load humanize %}
 
 {% block meta %}
-<title>{{ products.name }} - Turboa</title>
+<title>Product Detail - Turboa</title>
 {% endblock meta %}
 
 {% block content %}
@@ -18,96 +17,187 @@
             </a>
         </div>
 
+        <!-- Loading State -->
+        <div id="loading-state" class="bg-white rounded-lg border border-gray-200 p-12 text-center hidden">
+            <svg class="animate-spin h-8 w-8 text-[#134686] inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+            </svg>
+            <p class="text-gray-600 mt-3">Loading product detail...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="bg-white rounded-lg border border-gray-200 p-12 text-center hidden">
+            <div class="w-16 h-16 mx-auto mb-4">
+                <div class="text-red-500 text-5xl">⚠️</div>
+            </div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Failed to load product</h3>
+            <p class="text-gray-500">Please try again later.</p>
+        </div>
+
         <!-- Product -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <article id="product-content" class="bg-white rounded-lg overflow-hidden hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-            <!-- Foto (Kolom pertama) -->
-            <div class="bg-white rounded-lg overflow-hidden">
-                {% if products.thumbnail %}
-                <img src="{{ products.thumbnail }}" alt="{{ products.name }}" class="w-full h-80 object-cover">
-                {% else %}
-                <div class="w-full h-80 bg-gray-200 flex items-center justify-center text-gray-500">
-                    <img src="{% static 'image/no-image.png' %}">
+                <!-- Gambar -->
+                <div id="featured-image-container" class="bg-white rounded-lg overflow-hidden">
+                    <img id="featured-image" src="" alt="" class="w-full h-70 sm:h-80 lg:h-70 object-cover rounded-lg">
+                    <div id="no-image"
+                        class="w-full h-80 bg-gray-200 flex items-center justify-center text-gray-500 hidden">
+                        <img src="{% static 'image/no-image.png' %}" alt="No Image">
+                    </div>
                 </div>
-                {% endif %}
-            </div>
 
-            <!-- Kolom kanan (detail + buy) -->
-            <div class="flex flex-col gap-4">
-                <!-- Detail Produk -->
-                <div class="bg-white rounded-lg">
-                    <h1 class="text-2xl font-bold text-gray-900 mb-3">
-                        {{ products.name }}
-                    </h1>
+                <!-- Detail -->
+                <div class="flex flex-col gap-4">
+                    <div class="bg-white rounded-lg">
+                        <h1 id="product-name" class="text-2xl font-bold text-gray-900 mb-3"></h1>
+                        <h2 id="product-price" class="text-4xl font-bold text-[#ED3F27] mb-4"></h2>
 
-                    <h2 class="text-4xl font-bold text-[#ED3F27] mb-4">
-                        Rp. {{ products.price|intcomma }}
-                    </h2>
+                        <div id="badges-container" class="flex items-center gap-2 mb-4"></div>
 
-                    <!-- Category -->
-                    <div class="flex items-center gap-2 mb-4">
-                        <span
-                            class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-[#134686] text-white">
-                            {{ products.get_category_display }}
-                        </span>
-                        {% if products.is_featured %}
-                        <span
-                            class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800">
-                            Featured
-                        </span>
-                        {% endif %}
+                        <p class="text-sm text-gray-700 mb-2"><b>Brand:</b> <span id="product-brand"></span></p>
                     </div>
 
-                    <!-- Brand -->
-                    <p class="text-sm text-gray-700 mb-2"><b>Brand:</b> {{ products.brand }}</p>
-                </div>
-
-                <!-- Beli -->
-                <div class="bg-white border rounded-lg p-6 shadow-md flex flex-col justify-between">
-                    <div>
+                    <div class="bg-white border rounded-lg p-6 shadow-md flex flex-col justify-between">
                         <h3 class="text-xl font-bold text-gray-900 mb-4">Buy Now!</h3>
-                    </div>
-                    <div class="flex gap-3">
-                        <button
-                            class="w-1/2 bg-white border border-[#ED3F27] text-[#ED3F27] font-semibold py-2 px-4 rounded-lg hover:bg-[#fff5f5] transition">
-                            Add To Cart
-                        </button>
-                        <button
-                            class="w-1/2 bg-[#ED3F27] text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition">
-                            Buy
-                        </button>
+                        <div class="flex gap-3">
+                            <button
+                                class="w-1/2 bg-white border border-[#ED3F27] text-[#ED3F27] font-semibold py-2 px-4 rounded-lg hover:bg-[#fff5f5] transition">
+                                Add To Cart
+                            </button>
+                            <button
+                                class="w-1/2 bg-[#ED3F27] text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 transition">
+                                Buy
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Full width bawah -->
-        <div class="mt-10">
-            <div class="flex items-center gap-5">
-                <!-- Stock dan Rating -->
-                <span class="inline-flex items-center px-2 py-1 rounded-md bg-yellow-100 text-yellow-800">
-                    ⭐ {{ products.rating }}
-                </span>
-                <span class="text-gray-500 text-sm">
-                    Stock: <span class="font-semibold">{{ products.stock }}</span>
-                </span>
-            </div>
-            <!-- Deskripsi -->
-            <div class="mt-6 text-gray-700 text-sm leading-relaxed">
-                <p class="font-semibold">Deskripsi:</p>
-                <p>{{ products.description }}</p>
-            </div>
+            <!-- Deskripsi, stok, dan seller -->
+            <div class="mt-10">
+                <div class="flex items-center gap-5">
+                    <span class="inline-flex items-center px-2 py-1 rounded-md bg-yellow-100 text-yellow-800">⭐
+                        <span id="product-rating"></span>
+                    </span>
+                    <span class="text-gray-500 text-sm">Stock:
+                        <span id="product-stock" class="font-semibold"></span>
+                    </span>
+                </div>
 
-            <!-- Seller -->
-            <div class="mt-6 text-sm text-gray-600">
-                {% if products.user %}
-                <p><b>Seller:</b> {{ products.user.username }}</p>
-                {% else %}
-                <p><b>Seller:</b> Unidentified</p>
-                {% endif %}
+                <div class="mt-6 text-gray-700 text-sm leading-relaxed">
+                    <p class="font-semibold"><b>Deskripsi:</b></p>
+                    <p id="product-description"></p>
+                </div>
+
+                <div class="mt-6 text-sm text-gray-700">
+                    <p><b>Seller:</b> <span id="product-seller"></span></p>
+                </div>
             </div>
-        </div>
+        </article>
     </div>
 </div>
+
+<script>
+    const PRODUCT_ID = "{{ product.id }}";
+    const PRODUCT_DETAIL_ENDPOINT = `{% url 'main:show_json_by_id' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', PRODUCT_ID);
+
+    const loadingState = document.getElementById('loading-state');
+    const errorState = document.getElementById('error-state');
+    const productContent = document.getElementById('product-content');
+
+    const badgesContainer = document.getElementById('badges-container');
+    const productName = document.getElementById('product-name');
+    const productCategory = document.getElementById('product-category');
+    const productPrice = document.getElementById('product-price');
+
+    const productBrand = document.getElementById('product-brand');
+    const featuredImageContainer = document.getElementById('featured-image-container')
+    const productDescriptionText = document.getElementById('product-description');
+    const productSeller = document.getElementById('product-seller');
+    const productStock = document.getElementById('product-stock');
+    const productRating = document.getElementById('product-rating');
+    const featuredImage = document.getElementById('featured-image');
+    const noImage = document.getElementById('no-image');
+
+    function showState(state) {
+        loadingState.classList.toggle('hidden', state !== 'loading');
+        errorState.classList.toggle('hidden', state !== 'error');
+        productContent.classList.toggle('hidden', state !== 'ready');
+    }
+
+    function getReadableCategoryName(categoryCode) {
+        const categoryMapping = {
+            shoes: 'Shoes',
+            jersey: 'Jersey',
+            sock: 'Sock',
+            shinGuard: 'Shin Guard',
+            cleat: 'Cleat',
+            ball: 'Ball',
+            handGloves: 'Hand Gloves',
+        };
+        return categoryMapping[categoryCode] || categoryCode;
+    }
+
+    function renderProduct(product) {
+        productName.textContent = product.name;
+        document.name = `${product.name} - Product Detail`;
+
+        badgesContainer.innerHTML = '';
+
+        const categoryBadge = document.createElement('span');
+        categoryBadge.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-[#134686] text-white';
+        categoryBadge.textContent = getReadableCategoryName(product.category);
+        badgesContainer.appendChild(categoryBadge);
+
+        if (product.is_featured) {
+            const featuredBadge = document.createElement('span');
+            featuredBadge.className = 'inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800';
+            featuredBadge.textContent = 'Featured';
+            badgesContainer.appendChild(featuredBadge);
+        }
+
+        productPrice.textContent = `Rp ${Number(product.price).toLocaleString('id-ID')}`;
+        productStock.textContent = product.stock ?? 0;
+        productRating.textContent = product.rating ? `${product.rating}/5` : "No rating";
+
+        if (product.thumbnail) {
+            featuredImage.src = product.thumbnail;
+            featuredImage.alt = product.name;
+            featuredImageContainer.classList.remove('hidden');
+        } else {
+            featuredImageContainer.classList.add('hidden');
+        }
+        const sellerName = product.user_username || "Anonymous";
+        productDescriptionText.textContent = product.description || "No description available.";
+        productSeller.textContent = sellerName;
+        productBrand.textContent = product.brand || "Unknown";
+    }
+
+    async function loadProductDetail() {
+        try {
+            showState('loading');
+
+            const response = await fetch(PRODUCT_DETAIL_ENDPOINT, {
+                headers: { 'Accept': 'application/json' },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch product detail');
+            }
+
+            const productsData = await response.json();
+            renderProduct(productsData);
+            showState('ready');
+        } catch (err) {
+            console.error('Error loading product detail:', err);
+            showState('error');
+        }
+    }
+
+    loadProductDetail();
+</script>
 
 {% endblock content %}

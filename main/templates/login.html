@@ -14,32 +14,11 @@
       <p class="text-lg text-gray-600">Welcome back to Turboa</p>
     </div>
 
-    <!-- Form Errors Display -->
-    {% if form.non_field_errors %}
-    <div class="mb-6">
-      {% for error in form.non_field_errors %}
-      <div class="px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700">
-        {{ error }}
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
+    <!-- Tempat untuk menampilkan error AJAX -->
+    <div id="ajaxErrors" class="mb-6"></div>
 
-    {% if form.errors %}
-    <div class="mb-6">
-      {% for field, errors in form.errors.items %}
-      {% if field != '__all__' %}
-      {% for error in errors %}
-      <div class="px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700 mb-2">
-        <strong>{{ field|title }}:</strong> {{ error }}
-      </div>
-      {% endfor %}
-      {% endif %}
-      {% endfor %}
-    </div>
-    {% endif %}
-
-    <form method="POST" action="" class="mt-3 space-y-6">
+    <!-- Login Form -->
+    <form id="loginForm" method="POST" class="mt-3 space-y-6">
       {% csrf_token %}
 
       <div>
@@ -56,31 +35,12 @@
           placeholder="Enter your password">
       </div>
 
-      <button type="submit" class="w-full font-medium py-3 px-4 rounded-md hover:opacity-90 transition-colors"
+      <button type="submit" id="loginButton"
+        class="w-full font-medium py-3 px-4 rounded-md hover:opacity-90 transition-colors"
         style="background-color: #134686; color: white;">
         Sign In
       </button>
     </form>
-
-    <!-- Messages Display -->
-    {% if messages %}
-    <div class="mt-6">
-      {% for message in messages %}
-      <div class="
-                px-4 py-3 rounded-md text-sm border
-                {% if message.tags == 'success' %}
-                  bg-green-50 border-green-200 text-green-700
-                {% elif message.tags == 'error' %}
-                  bg-red-50 border-red-200 text-red-700
-                {% else %}
-                  bg-gray-50 border-gray-200 text-gray-700
-                {% endif %}
-              ">
-        {{ message }}
-      </div>
-      {% endfor %}
-    </div>
-    {% endif %}
 
     <div class="mt-6 text-center pt-6 border-t border-gray-200">
       <p class="text-gray-500 text-sm">
@@ -92,5 +52,61 @@
     </div>
   </div>
 </div>
-</div>
 {% endblock content %}
+
+<script>
+  const loginForm = document.getElementById('loginForm');
+  const loginButton = document.getElementById('loginButton');
+  const ajaxErrors = document.getElementById('ajaxErrors');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();  // cegah reload halaman
+    ajaxErrors.innerHTML = '';  // reset error messages
+
+    loginButton.disabled = true;
+    loginButton.textContent = 'Signing In...';
+
+    const formData = new FormData(loginForm);
+
+    try {
+      const response = await fetch("{% url 'main:user_login_ajax' %}", {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+        },
+        body: formData,
+        credentials: 'same-origin'
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        window.location.href = data.redirect_url;
+      } else {
+        if (data.errors) {
+          for (const field in data.errors) {
+            data.errors[field].forEach(err => {
+              const div = document.createElement('div');
+              div.className = 'px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700 mb-2';
+              div.textContent = `${field}: ${err.message}`;
+              ajaxErrors.appendChild(div);
+            });
+          }
+        } else if (data.error) {
+          const div = document.createElement('div');
+          div.className = 'px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700 mb-2';
+          div.textContent = data.error;
+          ajaxErrors.appendChild(div);
+        }
+      }
+    } catch (err) {
+      const div = document.createElement('div');
+      div.className = 'px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700 mb-2';
+      div.textContent = 'Something went wrong, please try again.';
+      ajaxErrors.appendChild(div);
+    } finally {
+      loginButton.disabled = false;
+      loginButton.textContent = 'Sign In';
+    }
+  });
+</script>

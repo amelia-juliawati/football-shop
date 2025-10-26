@@ -13,12 +13,12 @@
     <!-- Header Section -->
     <div class="mb-8">
       <h1 class="text-3xl font-bold text-[#134686] mb-2">New Arrivals!</h1>
-      <p class="text-gray-600">Discover the latest gear to level up your game.</p>
+      <p class="text-gray-600 font-[Nunito]">Discover the latest gear to level up your game.</p>
     </div>
 
     <!-- Filter Section -->
     <div
-      class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 rounded-lg border border-gray-200 p-4">
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 rounded-lg border border-gray-200 p-4 font-[Nunito]">
       <div class="flex space-x-3 mb-4 sm:mb-0">
         <a id="filter-all"
           class="{% if request.GET.filter == 'all' or not request.GET.filter  %} bg-[#134686] text-white hover:bg-[#0a2e5c] hover:text-white {% else %}bg-white text-gray-700 border border-gray-300 hover:bg-gray-200 hover:text-gray-700 {% endif %} px-4 py-2 rounded-md font-medium transition-colors">
@@ -37,7 +37,7 @@
     </div>
 
     <button id="refreshProducts"
-      class="px-4 py-2 border border-[#134686] text-black rounded-md hover:bg-gray-300 transition-colors mb-4">
+      class="px-4 py-2 border border-[#134686] text-black rounded-md hover:bg-gray-300 transition-colors mb-4 font-[Nunito]">
       🔄 Refresh Products
     </button>
 
@@ -72,7 +72,7 @@
     </div>
 
     <!-- Button to open modal -->
-    <button onclick="showModal()" class="w-full inline-flex justify-center items-center px-4 py-4 bg-white text-[#134686] font-semibold 
+    <button onclick="showModal()" class="w-full inline-flex justify-center items-center px-4 py-4 bg-white text-[#134686] font-[Nunito] font-semibold
            outline outline-2 outline-[#134686] outline-offset-[-2px] rounded-md 
            hover:bg-[#0a2e5c] hover:text-white transition-colors mb-6 mt-6">
       + Create New Product
@@ -120,7 +120,7 @@
 
     // Add grid classes when showing grid
     if (showGrid) {
-      productsGridContainer.className = 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6';
+      productsGridContainer.className = 'grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6 font-[Nunito]';
     }
   }
 

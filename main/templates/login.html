@@ -11,41 +11,41 @@
   <div class="bg-white rounded-lg p-8 w-full max-w-md">
     <div class="text-center mb-6">
       <h1 class="text-3xl sm:text-4xl font-bold text-[#134686] mb-2">Sign In</h1>
-      <p class="text-lg text-gray-600">Welcome back to Turboa</p>
+      <p class="text-lg text-gray-600 font-[Nunito]">Welcome back to Turboa</p>
     </div>
-
-    <!-- Tempat untuk menampilkan error AJAX -->
-    <div id="ajaxErrors" class="mb-6"></div>
 
     <!-- Login Form -->
     <form id="loginForm" method="POST" class="mt-3 space-y-6">
       {% csrf_token %}
 
+      <!-- Tempat untuk menampilkan error AJAX -->
+      <div id="ajaxErrors" class="mb-6"></div>
+      
       <div>
-        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+        <label for="username" class="block text-sm font-medium text-gray-700 mb-2 font-[Nunito]">Username</label>
         <input id="username" name="username" type="text" required
-          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-[#134686] transition-colors"
+          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-[#134686] transition-colors font-[Nunito]"
           placeholder="Enter your username">
       </div>
 
       <div>
-        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-2 font-[Nunito]">Password</label>
         <input id="password" name="password" type="password" required
-          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-[#134686] transition-colors"
+          class="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:border-[#134686] transition-colors font-[Nunito]"
           placeholder="Enter your password">
       </div>
 
       <button type="submit" id="loginButton"
-        class="w-full font-medium py-3 px-4 rounded-md hover:opacity-90 transition-colors"
+        class="w-full font-medium py-3 px-4 rounded-md hover:opacity-90 transition-colors font-[Nunito]"
         style="background-color: #134686; color: white;">
         Sign In
       </button>
     </form>
 
     <div class="mt-6 text-center pt-6 border-t border-gray-200">
-      <p class="text-gray-500 text-sm">
+      <p class="text-gray-500 text-sm font-[Nunito]">
         Don't have an account?
-        <a href="{% url 'main:register' %}" class="text-[#ED3F27] hover:text-[#ED3F27] font-medium">
+        <a href="{% url 'main:register' %}" class="text-[#ED3F27] hover:text-[#ED3F27] font-medium font-[Nunito]">
           Register Now
         </a>
       </p>
@@ -61,7 +61,6 @@
 
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();  // cegah reload halaman
-    ajaxErrors.innerHTML = '';  // reset error messages
 
     loginButton.disabled = true;
     loginButton.textContent = 'Signing In...';
@@ -71,9 +70,6 @@
     try {
       const response = await fetch("{% url 'main:user_login_ajax' %}", {
         method: 'POST',
-        headers: {
-          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-        },
         body: formData,
         credentials: 'same-origin'
       });
@@ -84,11 +80,12 @@
         window.location.href = data.redirect_url;
       } else {
         if (data.errors) {
+          ajaxErrors.innerHTML = '';
           for (const field in data.errors) {
             data.errors[field].forEach(err => {
               const div = document.createElement('div');
               div.className = 'px-4 py-3 rounded-md text-sm border bg-red-50 border-red-200 text-red-700 mb-2';
-              div.textContent = `${field}: ${err.message}`;
+              div.textContent = field === "__all__" ? `${err.message}` : `${field}: ${err.message}`;
               ajaxErrors.appendChild(div);
             });
           }
